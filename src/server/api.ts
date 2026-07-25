@@ -26,6 +26,7 @@ import {
   verifyPassword,
 } from "@/lib/auth";
 import { saveUpload, UploadError, UPLOAD_DIR } from "@/lib/upload";
+import { ensureSchema } from "@/server/bootstrap";
 import {
   KATEGORI_FORM,
   KATEGORI_LIST,
@@ -425,6 +426,7 @@ async function adminList(request: NextRequest) {
         ilike(keluhan.nomorTiket, like),
         ilike(keluhan.judulKeluhan, like),
         ilike(keluhan.kategoriKeluhan, like),
+        ilike(keluhan.ruanganPelayanan, like),
       )!,
     );
   }
@@ -896,6 +898,9 @@ const SEED_RATING_COMMENTS = [
 const DOMAINS = ["gmail.com", "yahoo.com", "outlook.com"];
 
 async function seedDemo(_request: NextRequest) {
+  // Pastikan tabel ada terlebih dahulu — aman untuk deploy Vercel + Neon
+  // yang belum pernah di-`drizzle-kit push`.
+  await ensureSchema();
   const [existing] = await db.select({ n: count() }).from(keluhan);
   if (Number(existing?.n ?? 0) > 0) {
     return json({
@@ -1105,7 +1110,18 @@ export async function apiRouter(request: NextRequest, slug: string[]) {
     if (!s0 && method === "GET") return json({ ok: true, app: "SIPEKA API" });
     throw new ApiError(404, "Endpoint tidak ditemukan.");
   } catch (e) {
-    if (e instanceof ApiError) return json({ error: e.message }, e.status);
+    // Duck-typing: hindari kegagalan instanceof ApiError akibat duplikasi
+    // kelas antar-chunk bundler. ApiError selalu membawa properti `status`.
+    const err = e as { status?: unknown; message?: unknown };
+    if (
+      err &&
+      typeof err.status === "number" &&
+      typeof err.message === "string" &&
+      err.status >= 400 &&
+      err.status < 600
+    ) {
+      return json({ error: err.message }, err.status);
+    }
     console.error("SIPEKA API error:", e);
     return json({ error: "Terjadi kesalahan pada server." }, 500);
   }

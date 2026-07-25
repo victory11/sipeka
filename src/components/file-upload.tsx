@@ -5,7 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { cx } from "@/lib/utils";
 
 const OK_TYPES = ["image/jpeg", "image/png"];
-const MAX = 5 * 1024 * 1024;
+const MAX = 3 * 1024 * 1024;
 
 export function FileUpload({
   file,
@@ -31,7 +31,7 @@ export function FileUpload({
 
   function validate(f: File): string | null {
     if (!OK_TYPES.includes(f.type)) return "Format file harus JPG, JPEG, atau PNG.";
-    if (f.size > MAX) return "Ukuran file melebihi 5MB.";
+    if (f.size > MAX) return "Ukuran file melebihi 3MB.";
     return null;
   }
 
@@ -119,7 +119,7 @@ export function FileUpload({
         Seret foto ke sini atau <span className="text-primary-700">klik untuk memilih</span>
       </p>
       <p className="flex items-center gap-1.5 text-xs text-ink-400">
-        <FileImage size={13} /> File maksimal 5MB, format JPG/PNG
+        <FileImage size={13} /> File maksimal 3MB, format JPG/PNG
       </p>
     </div>
   );
