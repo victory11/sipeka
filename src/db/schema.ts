@@ -62,7 +62,18 @@ export const responses = pgTable("responses", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
+// Pastikan barisnya persis seperti ini:
+export const complaintCategories = pgTable(
+  "kategori_keluhan",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    namaKategori: varchar("nama_kategori", { length: 200 }).notNull().unique(),
+    // ... baris lainnya
+  }
+);
+
 
 export type Admin = typeof admins.$inferSelect;
 export type Keluhan = typeof keluhan.$inferSelect;
 export type KeluhanResponse = typeof responses.$inferSelect;
+export type ComplaintCategory = typeof complaintCategories.$inferSelect;

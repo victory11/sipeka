@@ -1055,3 +1055,4 @@ export function mapComplaintToDisplay(detail: ComplaintDetail) {
     categoryIcon: getComplaintCategoryIcon(detail.complaint.kategoriKeluhan as ComplaintCategory),
   };
 }
+
