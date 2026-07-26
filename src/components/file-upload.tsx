@@ -1,4 +1,5 @@
 "use client";
+/// <reference types="react" />
 
 import { FileImage, ImagePlus, Trash2, UploadCloud } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";

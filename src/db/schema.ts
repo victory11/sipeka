@@ -37,7 +37,7 @@ export const keluhan = pgTable("keluhan", {
   kategoriKeluhan: varchar("kategori_keluhan", { length: 60 }).notNull(),
   judulKeluhan: varchar("judul_keluhan", { length: 100 }).notNull(),
   isiKeluhan: text("isi_keluhan").notNull(),
-  fotoKeluhanUrl: varchar("foto_keluhan_url", { length: 255 }),
+  fotoKeluhanUrl: text("foto_keluhan_url"),
 
   // Status & tracking
   status: varchar("status", { length: 20 }).notNull().default("Ditinjau"),
@@ -56,7 +56,7 @@ export const responses = pgTable("responses", {
     onDelete: "set null",
   }),
   isiResponse: text("isi_response").notNull(),
-  fotoResponseUrl: varchar("foto_response_url", { length: 255 }),
+  fotoResponseUrl: text("foto_response_url"),
   ratingKepuasan: integer("rating_kepuasan"),
   komentarRating: text("komentar_rating"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
